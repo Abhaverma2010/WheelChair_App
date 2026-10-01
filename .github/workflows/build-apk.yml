@@ -18,6 +18,25 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Set up Android command-line tools
+        run: |
+          set -e
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          echo "Using SDK_ROOT=$SDK_ROOT"
+          CMDTOOLS_BIN=$(find "$SDK_ROOT" -maxdepth 4 -type d -path "*cmdline-tools*/bin" 2>/dev/null | head -1)
+          if [ -z "$CMDTOOLS_BIN" ]; then
+            echo "No cmdline-tools found on the runner, downloading..."
+            mkdir -p "$SDK_ROOT/cmdline-tools"
+            curl -sSL -o /tmp/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+            unzip -q /tmp/cmdline-tools.zip -d "$SDK_ROOT/cmdline-tools"
+            mv "$SDK_ROOT/cmdline-tools/cmdline-tools" "$SDK_ROOT/cmdline-tools/latest"
+            CMDTOOLS_BIN="$SDK_ROOT/cmdline-tools/latest/bin"
+          fi
+          echo "Found sdkmanager at $CMDTOOLS_BIN"
+          echo "$CMDTOOLS_BIN" >> "$GITHUB_PATH"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
