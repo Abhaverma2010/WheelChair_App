@@ -3,6 +3,7 @@ package com.wheelchair.bluetoothswitch;
 import static org.junit.Assert.assertTrue;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
@@ -86,13 +87,19 @@ public class MainActivityScreenshotTest {
         Canvas canvas = new Canvas(buttonBitmap);
         button.draw(canvas);
 
-        try {
-            savePng(buttonBitmap, "isolated_" + name + ".png");
-        } catch (Exception ignored) {
-            // Debug aid only; never fail the test over a missed debug PNG.
-        }
+        File pngFile = savePng(buttonBitmap, "isolated_" + name + ".png");
 
-        int pixel = buttonBitmap.getPixel(button.getWidth() / 2, button.getHeight() / 2);
+        // Sample from a bitmap re-decoded from the saved PNG bytes, not the
+        // live canvas-drawn Bitmap object directly. On a 1040x56 (wide,
+        // short) button, Bitmap.getPixel() on the freshly-drawn bitmap
+        // returned pure white (ffffffff) even though the SAME bitmap's own
+        // PNG export (and visual inspection of that PNG) showed the button
+        // correctly rendered gray -- a width/stride readback quirk in
+        // Robolectric's native graphics mode, not a real app bug. Decoding
+        // from the known-good PNG bytes avoids that readback path entirely.
+        Bitmap decoded = BitmapFactory.decodeFile(pngFile.getAbsolutePath());
+        assertTrue(name + " PNG could not be decoded back for sampling", decoded != null);
+        int pixel = decoded.getPixel(decoded.getWidth() / 2, decoded.getHeight() / 2);
 
         // Rather than asserting an exact shade (the real rendered gray turned
         // out to be #EAEAEA, not the #BDBDBD the drawable XML specifies in
@@ -114,12 +121,13 @@ public class MainActivityScreenshotTest {
                 Color.alpha(pixel) > 200 && distanceFromWhiteBackground > 30);
     }
 
-    private static void savePng(Bitmap bitmap, String fileName) throws Exception {
+    private static File savePng(Bitmap bitmap, String fileName) throws Exception {
         File dir = new File("build/screenshots");
         dir.mkdirs();
         File out = new File(dir, fileName);
         try (FileOutputStream stream = new FileOutputStream(out)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         }
+        return out;
     }
 }
