@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bluetooth Switch</string>
+    <string name="heading">ESP32 WHEELCHAIR</string>
+
+    <string name="select_device">Select Bluetooth Device</string>
+    <string name="select_device_title">Bluetooth Devices</string>
+
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_connecting">Connecting…</string>
+    <string name="status_connected_to">Connected to %1$s</string>
+    <string name="status_connection_failed">Connection failed</string>
+
+    <string name="btn_forward">↑ FORWARD</string>
+    <string name="btn_backward">↓ BACKWARD</string>
+    <string name="btn_left">← LEFT</string>
+    <string name="btn_right">RIGHT →</string>
+    <string name="btn_stop">STOP</string>
+    <string name="btn_voice">🎤 VOICE CONTROL</string>
+    <string name="btn_voice_locked">🎤 Connect Bluetooth first</string>
+
+    <string name="label_current_command">Current Command:</string>
+    <string name="label_bluetooth_device">Bluetooth Device:</string>
+    <string name="label_none">—</string>
+
+    <string name="debug_title">Debug / Status</string>
+    <string name="debug_bluetooth">Bluetooth:</string>
+    <string name="debug_device">Device:</string>
+    <string name="debug_last_command">Last command:</string>
+    <string name="debug_last_voice">Last recognized voice:</string>
+
+    <string name="error_no_bluetooth_adapter">This device does not support Bluetooth.</string>
+    <string name="error_bluetooth_disabled">Bluetooth is turned off. Please enable it to continue.</string>
+    <string name="error_permission_denied">Bluetooth permission was denied. Grant it in Settings to connect to the wheelchair.</string>
+    <string name="error_no_paired_devices">No paired devices found. Pair \"ESP32_WHEELCHAIR\" in your phone\'s Bluetooth settings first, then tap Scan here.</string>
+    <string name="error_connect_failed">Could not connect to %1$s. Make sure the ESP32 is powered on and in range, then try again.</string>
+    <string name="error_socket_lost">Connection to the wheelchair was lost.</string>
+    <string name="error_speech_not_recognized">Didn\'t catch that. Please try again.</string>
+    <string name="error_speech_unsupported">Voice recognition is not available on this device.</string>
+    <string name="error_bluetooth_enable_declined">Bluetooth must be enabled to control the wheelchair.</string>
+
+    <string name="paired">Paired</string>
+    <string name="available">Available</string>
+    <string name="scan_for_devices">Scan for devices</string>
+    <string name="scanning">Scanning…</string>
+
+    <string name="voice_prompt">Say a command: forward, backward, left, right, or stop</string>
+    <string name="voice_recognized_format">Recognized: \"%1$s\"</string>
+
+    <string name="alert_fall_title">⚠ FALL DETECTED — check on the user immediately</string>
+    <string name="alert_fall_dismiss">Dismiss</string>
+
+    <string name="gps_title">Last Known Location (from ESP32)</string>
+    <string name="gps_no_fix">No GPS fix yet</string>
+    <string name="gps_view_on_map">View on Map</string>
+    <string name="gps_note">Shown only while this phone is Bluetooth-connected. The ESP32 also SMS\'s this location to the caregiver independently.</string>
+</resources>

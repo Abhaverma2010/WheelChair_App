@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android-style blue app bar -->
+    <color name="colorPrimary">#1565C0</color>
+    <color name="colorPrimaryDark">#0D47A1</color>
+    <color name="colorAccent">#1565C0</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="background">#FFFFFFFF</color>
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#616161</color>
+
+    <!-- Movement button -->
+    <color name="buttonBlue">#1976D2</color>
+    <color name="buttonBluePressed">#0D47A1</color>
+    <color name="buttonDisabled">#BDBDBD</color>
+
+    <!-- Stop button: must be visually prominent -->
+    <color name="buttonStop">#D32F2F</color>
+    <color name="buttonStopPressed">#9A0007</color>
+
+    <!-- Voice control button -->
+    <color name="buttonVoice">#2E7D32</color>
+    <color name="buttonVoicePressed">#1B5E20</color>
+
+    <color name="statusConnected">#2E7D32</color>
+    <color name="statusDisconnected">#D32F2F</color>
+    <color name="statusConnecting">#F57F17</color>
+
+    <color name="cardBackground">#F5F5F5</color>
+    <color name="cardBorder">#E0E0E0</color>
+    <color name="logText">#37474F</color>
+
+    <!-- Fall alert banner -->
+    <color name="alertBannerBackground">#B71C1C</color>
+
+    <!-- GPS card -->
+    <color name="gpsCardBackground">#E3F2FD</color>
+    <color name="gpsCardBorder">#90CAF9</color>
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ===================== BLUETOOTH PERMISSIONS ===================== -->
+
+    <!-- Legacy permissions, needed only on Android 11 (API 30) and below.
+         On Android 12+ these are replaced by BLUETOOTH_SCAN / BLUETOOTH_CONNECT below. -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!-- Required on Android 6-11 to receive discovered-device results from
+         BluetoothAdapter.startDiscovery(). Not required just to list paired
+         devices or to connect to an already-paired device. -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <!-- Android 12+ (API 31+) permissions. neverForLocation tells the system
+         this app does NOT use scan results to physically locate the user,
+         which means we do NOT also need ACCESS_FINE_LOCATION on API 31+. -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+
+    <!-- Needed to launch RecognizerIntent.ACTION_RECOGNIZE_SPEECH on some
+         older devices / to query whether a speech recognizer is available. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:roundIcon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.BluetoothSwitch"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DeviceListActivity"
+            android:exported="false"
+            android:label="@string/select_device_title"
+            android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>

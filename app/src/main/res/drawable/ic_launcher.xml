@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M54,4 A50,50 0 1,1 53.99,4 Z" />
+
+    <!-- Outer ring (wheel) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,20 A34,34 0 1,1 53.99,20 Z
+                           M54,30 A24,24 0 1,0 54.01,30 Z" />
+
+    <!-- Up arrow (forward) -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M54,36 L64,52 L58,52 L58,66 L50,66 L50,52 L44,52 Z" />
+
+</vector>

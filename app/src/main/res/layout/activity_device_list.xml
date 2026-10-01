@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/textPairedHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardBackground"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Paired devices"
+        android:textColor="@color/textSecondary"
+        android:textStyle="bold"
+        android:textSize="13sp" />
+
+    <ListView
+        android:id="@+id/listPairedDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/cardBorder"
+        android:dividerHeight="1dp" />
+
+    <TextView
+        android:id="@+id/textAvailableHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardBackground"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Available devices"
+        android:textColor="@color/textSecondary"
+        android:textStyle="bold"
+        android:textSize="13sp" />
+
+    <ListView
+        android:id="@+id/listAvailableDevices"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/cardBorder"
+        android:dividerHeight="1dp" />
+
+    <TextView
+        android:id="@+id/textEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:gravity="center"
+        android:text="@string/error_no_paired_devices"
+        android:textColor="@color/textSecondary"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/buttonScan"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_button_outline"
+        android:text="@string/scan_for_devices"
+        android:textColor="@color/colorPrimary"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:elevation="0dp" />
+
+</LinearLayout>
