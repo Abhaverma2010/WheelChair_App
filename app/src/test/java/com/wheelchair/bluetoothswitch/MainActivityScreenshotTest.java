@@ -78,7 +78,7 @@ public class MainActivityScreenshotTest {
      * sampled center pixel will NOT be distinguishable from the screen's
      * white background.
      */
-    private static void assertButtonRendersExpectedDisabledColor(View button, String name) {
+    private static void assertButtonRendersExpectedDisabledColor(View button, String name) throws Exception {
         assertTrue(name + " was not found in the inflated layout", button != null);
         assertTrue(name + " must have nonzero size (it may be collapsed/invisible)",
                 button.getWidth() > 0 && button.getHeight() > 0);
