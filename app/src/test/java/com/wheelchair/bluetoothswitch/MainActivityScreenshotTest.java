@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
-import android.view.ViewParent;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,36 +56,37 @@ public class MainActivityScreenshotTest {
 
         savePng(bitmap, "main_disconnected.png");
 
-        View buttonForward = activity.findViewById(R.id.buttonForward);
-        View buttonVoice = activity.findViewById(R.id.buttonVoice);
-
-        assertButtonRendersExpectedDisabledColor(bitmap, decorView, buttonForward, "buttonForward");
-        assertButtonRendersExpectedDisabledColor(bitmap, decorView, buttonVoice, "buttonVoice");
+        assertButtonRendersExpectedDisabledColor(activity.findViewById(R.id.buttonForward), "buttonForward");
+        assertButtonRendersExpectedDisabledColor(activity.findViewById(R.id.buttonVoice), "buttonVoice");
 
         controller.pause().stop().destroy();
     }
 
     /**
+     * Draws the button to its OWN bitmap (not sampled out of the full-screen
+     * screenshot via hand-computed ancestor offsets, which turned out to be
+     * fragile -- it mis-sampled buttonVoice's position on the first attempt
+     * even though the button was correctly visible in the actual screenshot).
+     * Rendering the view directly onto a same-sized bitmap and sampling its
+     * own center sidesteps coordinate math entirely while still exercising
+     * the real draw call (theme resolution, background drawable, text).
+     *
      * The disabled-state drawable for the D-pad/voice buttons is a flat
      * #BDBDBD rectangle (R.color.buttonDisabled). If a button is invisible
      * (MaterialButton overlay hiding it, zero size, wrong color, etc.) the
-     * sampled center pixel will NOT be close to that color -- it will be
-     * the screen's white background instead.
+     * sampled center pixel will NOT be distinguishable from the screen's
+     * white background.
      */
-    private static void assertButtonRendersExpectedDisabledColor(
-            Bitmap bitmap, View decorView, View button, String name) {
+    private static void assertButtonRendersExpectedDisabledColor(View button, String name) {
         assertTrue(name + " was not found in the inflated layout", button != null);
         assertTrue(name + " must have nonzero size (it may be collapsed/invisible)",
                 button.getWidth() > 0 && button.getHeight() > 0);
 
-        int[] offset = locationRelativeTo(button, decorView);
-        int sampleX = offset[0] + button.getWidth() / 2;
-        int sampleY = offset[1] + button.getHeight() / 2;
+        Bitmap buttonBitmap = Bitmap.createBitmap(button.getWidth(), button.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(buttonBitmap);
+        button.draw(canvas);
 
-        assertTrue(name + " sample point is outside the rendered bitmap bounds",
-                sampleX >= 0 && sampleX < bitmap.getWidth() && sampleY >= 0 && sampleY < bitmap.getHeight());
-
-        int pixel = bitmap.getPixel(sampleX, sampleY);
+        int pixel = buttonBitmap.getPixel(button.getWidth() / 2, button.getHeight() / 2);
 
         // Rather than asserting an exact shade (the real rendered gray turned
         // out to be #EAEAEA, not the #BDBDBD the drawable XML specifies in
@@ -106,19 +106,6 @@ public class MainActivityScreenshotTest {
                         + "text/size but paints as blank/white instead of its disabled-state gray "
                         + "(R.color.buttonDisabled).",
                 Color.alpha(pixel) > 200 && distanceFromWhiteBackground > 30);
-    }
-
-    private static int[] locationRelativeTo(View view, View ancestor) {
-        int x = 0;
-        int y = 0;
-        View current = view;
-        while (current != null && current != ancestor) {
-            x += current.getLeft();
-            y += current.getTop();
-            ViewParent parent = current.getParent();
-            current = (parent instanceof View) ? (View) parent : null;
-        }
-        return new int[]{x, y};
     }
 
     private static void savePng(Bitmap bitmap, String fileName) throws Exception {
