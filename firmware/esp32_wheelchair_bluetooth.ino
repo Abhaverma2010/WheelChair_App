@@ -91,7 +91,7 @@ const unsigned long GPS_REPORT_INTERVAL_MS = 10000; // report every 10s while co
 #define SIM800_RX_PIN 4    // ESP32 RX  <- SIM800L TX
 #define SIM800_TX_PIN 19   // ESP32 TX  -> SIM800L RX
 HardwareSerial SIM800(2);
-#define CAREGIVER_PHONE_NUMBER "+10000000000"  // TODO: set the real caregiver number
+#define CAREGIVER_PHONE_NUMBER "+917828467906"
 
 // Runs the (slow, blocking-on-its-own-task) SMS dispatch so it never stalls
 // motor control or Bluetooth command handling on the main loop.
