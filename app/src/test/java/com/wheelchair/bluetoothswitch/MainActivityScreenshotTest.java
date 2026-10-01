@@ -86,6 +86,12 @@ public class MainActivityScreenshotTest {
         Canvas canvas = new Canvas(buttonBitmap);
         button.draw(canvas);
 
+        try {
+            savePng(buttonBitmap, "isolated_" + name + ".png");
+        } catch (Exception ignored) {
+            // Debug aid only; never fail the test over a missed debug PNG.
+        }
+
         int pixel = buttonBitmap.getPixel(button.getWidth() / 2, button.getHeight() / 2);
 
         // Rather than asserting an exact shade (the real rendered gray turned
