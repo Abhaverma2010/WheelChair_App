@@ -51,6 +51,12 @@ jobs:
         with:
           gradle-version: '8.4'
 
+      - name: Run unit tests (Robolectric screenshot + regression tests)
+        run: gradle test --stacktrace
+
+      - name: Run Android Lint
+        run: gradle lintDebug --stacktrace
+
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
 
@@ -71,3 +77,23 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --title "Wheelchair App (latest build)" \
             --notes "Automated debug APK build from commit ${{ github.sha }}. Install: download app-debug.apk, transfer to your phone, and allow 'install from unknown sources' when prompted."
+
+      - name: Publish CI debug artifacts (screenshots + test report)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          mkdir -p ci-debug
+          cp -r app/build/screenshots ci-debug/screenshots 2>/dev/null || true
+          cp -r app/build/reports/tests ci-debug/test-report 2>/dev/null || true
+          cp -r app/build/reports/lint-results-debug.html ci-debug/ 2>/dev/null || true
+          if [ -n "$(ls -A ci-debug 2>/dev/null)" ]; then
+            (cd ci-debug && zip -r ../ci-debug.zip .)
+            gh release delete ci-debug --yes --repo "$GITHUB_REPOSITORY" || true
+            git push origin :refs/tags/ci-debug || true
+            gh release create ci-debug ci-debug.zip \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "CI debug artifacts (latest run)" \
+              --notes "Screenshots + test/lint reports from commit ${{ github.sha }} (run ${{ github.run_id }})."
+          fi
