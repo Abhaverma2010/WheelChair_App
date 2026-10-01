@@ -99,7 +99,21 @@ public class MainActivityScreenshotTest {
                 sampleX >= 0 && sampleX < screenBitmap.getWidth()
                         && sampleY >= 0 && sampleY < screenBitmap.getHeight());
 
-        int pixel = screenBitmap.getPixel(sampleX, sampleY);
+        // Reading a pixel directly out of the full 1080x2400 bitmap via
+        // getPixel() has proven unreliable for some regions of it (returns
+        // ffffffff at coordinates visually confirmed, by downloading and
+        // looking at the exact same bitmap's own PNG export, to be clearly
+        // inside the correctly-rendered gray button) while working fine for
+        // others -- a Robolectric native-graphics readback bug, not a real
+        // app bug or a coordinate bug. Cropping a small sub-bitmap first via
+        // the standard Bitmap.createBitmap(src, x, y, w, h) API, then
+        // sampling THAT, uses a different/simpler native code path than
+        // reading one pixel out of a large bitmap directly.
+        int cropSize = 10;
+        int cropX = Math.max(0, Math.min(sampleX - cropSize / 2, screenBitmap.getWidth() - cropSize));
+        int cropY = Math.max(0, Math.min(sampleY - cropSize / 2, screenBitmap.getHeight() - cropSize));
+        Bitmap crop = Bitmap.createBitmap(screenBitmap, cropX, cropY, cropSize, cropSize);
+        int pixel = crop.getPixel(sampleX - cropX, sampleY - cropY);
 
         int distanceFromWhiteBackground = (255 - Color.red(pixel))
                 + (255 - Color.green(pixel))
