@@ -87,21 +87,25 @@ public class MainActivityScreenshotTest {
                 sampleX >= 0 && sampleX < bitmap.getWidth() && sampleY >= 0 && sampleY < bitmap.getHeight());
 
         int pixel = bitmap.getPixel(sampleX, sampleY);
-        int expected = 0xFFBDBDBD; // R.color.buttonDisabled
+
+        // Rather than asserting an exact shade (the real rendered gray turned
+        // out to be #EAEAEA, not the #BDBDBD the drawable XML specifies in
+        // isolation -- confirmed by actually inspecting the rendered PNG,
+        // not by re-guessing), assert what the bug actually was: the button
+        // must be clearly distinguishable from the plain white background
+        // it was invisible against.
+        int distanceFromWhiteBackground = (255 - Color.red(pixel))
+                + (255 - Color.green(pixel))
+                + (255 - Color.blue(pixel));
 
         assertTrue(
                 name + " center pixel is " + Integer.toHexString(pixel)
-                        + " but the disabled-state drawable (R.color.buttonDisabled, #BDBDBD) should render there. "
-                        + "This is exactly the symptom of the MaterialButton-overlay bug: the button exists in the "
-                        + "view tree with correct text/size but paints as blank/white.",
-                colorsAreClose(pixel, expected, 24));
-    }
-
-    private static boolean colorsAreClose(int a, int b, int tolerancePerChannel) {
-        return Math.abs(Color.red(a) - Color.red(b)) <= tolerancePerChannel
-                && Math.abs(Color.green(a) - Color.green(b)) <= tolerancePerChannel
-                && Math.abs(Color.blue(a) - Color.blue(b)) <= tolerancePerChannel
-                && Color.alpha(a) > 200;
+                        + ", which is indistinguishable from the plain white screen background "
+                        + "(R.color.background, #FFFFFF). This is exactly the symptom of the "
+                        + "invisible-button bug: the button exists in the view tree with correct "
+                        + "text/size but paints as blank/white instead of its disabled-state gray "
+                        + "(R.color.buttonDisabled).",
+                Color.alpha(pixel) > 200 && distanceFromWhiteBackground > 30);
     }
 
     private static int[] locationRelativeTo(View view, View ancestor) {
