@@ -14,9 +14,15 @@
 
     <!-- Required on Android 6-11 to receive discovered-device results from
          BluetoothAdapter.startDiscovery(). Not required just to list paired
-         devices or to connect to an already-paired device. -->
+         devices or to connect to an already-paired device. ACCESS_COARSE_LOCATION
+         is declared alongside it per Android's own guidance (and Lint's
+         CoarseFineLocation check): requesting FINE without COARSE is flagged
+         even though FINE implies COARSE-level access. -->
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
         android:maxSdkVersion="30" />
 
     <!-- Android 12+ (API 31+) permissions. neverForLocation tells the system
