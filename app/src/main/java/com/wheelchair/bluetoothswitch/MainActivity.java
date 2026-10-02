@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -41,8 +40,12 @@ import java.util.Locale;
  * Safety invariants enforced throughout this file:
  *  - Movement buttons are disabled whenever not connected (default state).
  *  - No movement command is ever sent automatically on connect/startup.
- *  - Releasing a movement button (or losing the connection, or backgrounding
- *    the app) sends 'S' (stop).
+ *  - Tapping a direction starts that movement and it continues until Stop
+ *    (or a new direction) is tapped explicitly -- not hold-to-move.
+ *  - Losing the connection or backgrounding the app still sends 'S' (stop)
+ *    as a last-resort safety net, independent of the tap/hold behavior
+ *    above: the wheelchair otherwise has no way to be stopped once control
+ *    is lost.
  *  - Voice control never bypasses the connection check.
  */
 public class MainActivity extends AppCompatActivity implements BluetoothService.ConnectionListener {
@@ -409,26 +412,16 @@ public class MainActivity extends AppCompatActivity implements BluetoothService.
 
     // ===================== Movement controls =====================
 
+    /**
+     * Tapping a direction starts that movement; it keeps going until the
+     * user taps Stop (or another direction, which simply sends a new
+     * command) -- not hold-to-move. The connection-loss and app-backgrounded
+     * auto-stops elsewhere in this class are a separate safety net (the
+     * wheelchair otherwise has no way to be stopped once control is lost)
+     * and are unaffected by this.
+     */
     private void setupMovementButton(Button button, char command) {
-        button.setOnTouchListener((v, event) -> {
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN:
-                    v.setPressed(true);
-                    sendMovementCommand(command);
-                    return true;
-                case MotionEvent.ACTION_UP:
-                    v.setPressed(false);
-                    v.performClick();
-                    sendMovementCommand('S');
-                    return true;
-                case MotionEvent.ACTION_CANCEL:
-                    v.setPressed(false);
-                    sendMovementCommand('S');
-                    return true;
-                default:
-                    return false;
-            }
-        });
+        button.setOnClickListener(v -> sendMovementCommand(command));
     }
 
     /** Sends a single command character if (and only if) currently connected. */
